@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 
 
@@ -27,17 +28,20 @@ function App() {
     const [predictions, setPredictions] = useState([])
 
     // useEffect → fetch history when page loads
-    useEffect(() => {
-        console.log("Page loaded! Fetching history...")
-        setTimeout(() => {
-            const fakePredictions = [
-                { id: 1, age: 25, glucose: 150, result: "High Risk" },
-                { id: 2, age: 30, glucose: 120, result: "Low Risk" },
-                { id: 3, age: 45, glucose: 180, result: "High Risk" },
-            ]
-            setPredictions(fakePredictions)
-        }, 1000)
-    }, [])
+const fetchHistory = () => {
+    axios.get("http://localhost:8000/predictions/")
+        .then((response) => {
+            setPredictions(response.data)
+        })
+        .catch((error) => {
+            console.error("Failed to fetch history:", error)
+        })
+}
+
+useEffect(() => {
+    console.log("Page loaded! Fetching history...")
+    fetchHistory()
+}, [])
 
     // Handle any input change
     const handleChange = (e) => {
@@ -46,25 +50,27 @@ function App() {
     }
 
     // Handle form submit
-    const handleSubmit = () => {
-        if (!formData.age || !formData.glucose) {
-            setError("Please fill all fields!")
-            return
-        }
-
-        setLoading(true)
-        setError(null)
-        setResult(null)
-
-        setTimeout(() => {
-            const risk = formData.glucose > 140 ? "High Risk" : "Low Risk"
-            setResult({
-                result: risk,
-                confidence: 87
-            })
-            setLoading(false)
-        }, 1500)
+    const handleSubmit = async () => {
+    if (!formData.age || !formData.glucose) {
+        setError("Please fill all fields!")
+        return
     }
+
+    setLoading(true)
+    setError(null)
+    setResult(null)
+
+    try {
+        const response = await axios.post("http://localhost:8000/predictions/", formData)
+        setResult(response.data)
+        fetchHistory()  // Refresh history after a new prediction
+    } catch (error) {
+        console.error("Prediction failed:", error)
+        setError("Something went wrong. Please try again.")
+    } finally {
+        setLoading(false)
+    }
+}
 
     return (
        <div className="max-w-md mx-auto mt-10 p-6">
