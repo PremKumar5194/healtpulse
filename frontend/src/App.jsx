@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-
+import RiskResult from './components/RiskResult'
+import HealthForm from './components/HealthForm'
+import HistoryList from './components/HistoryList'
 
 function App() {
     // Form data state
@@ -77,89 +79,14 @@ useEffect(() => {
     <h1 className="text-3xl font-bold text-center mb-2">HealtPulse</h1>
     <p className="text-center text-gray-500 mb-6">AI Powered Disease Risk Checker</p>
             {/* Form Section */}
-  <h2 className="text-xl font-semibold mb-4">Enter Health Data</h2>
-
-<div className="flex flex-col gap-3">
-    <input
-        type="number"
-        name="age"
-        placeholder="Age"
-        value={formData.age}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-md p-2 w-full"
-    />
-    <input
-        type="number"
-        name="glucose"
-        placeholder="Glucose"
-        value={formData.glucose}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-md p-2 w-full"
-    />
-    <input
-        type="number"
-        name="blood_pressure"
-        placeholder="Blood Pressure"
-        value={formData.blood_pressure}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-md p-2 w-full"
-    />
-    <input
-        type="number"
-        name="bmi"
-        placeholder="BMI"
-        value={formData.bmi}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-md p-2 w-full"
-    />
-    <input
-        type="number"
-        name="insulin"
-        placeholder="Insulin"
-        value={formData.insulin}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-md p-2 w-full"
-    />
-</div>
-
-           <button
-    onClick={handleSubmit}
-    className="bg-purple-600 text-white font-medium px-4 py-2 rounded-md mt-4 hover:bg-purple-700 transition"
->
-    Check Risk
-</button>
-
-          {/* Loading State */}
-{loading && (
-    <p className="text-purple-600 mt-4 animate-pulse">Calculating risk...</p>
-)}
-
-{/* Error State */}
-{error && (
-    <div className="bg-red-50 border border-red-300 text-red-600 rounded-md p-3 mt-4">
-        {error}
-    </div>
-)}
-
-           {result && (
-    <div className={`mt-6 p-4 rounded-md border ${
-        result.result === "High Risk"
-            ? "bg-red-50 border-red-300"
-            : "bg-green-50 border-green-300"
-    }`}>
-        <h2 className="text-lg font-semibold mb-1">Result: {result.result}</h2>
-        <p className="text-gray-600 mb-2">Confidence: {result.confidence}%</p>
-        {result.result === "High Risk" ? (
-            <p className="text-red-600 font-medium">
-                Please consult a doctor!
-            </p>
-        ) : (
-            <p className="text-green-600 font-medium">
-                You are doing well!
-            </p>
-        )}
-    </div>
-)}
+<HealthForm
+    formData={formData}
+    handleChange={handleChange}
+    handleSubmit={handleSubmit}
+    loading={loading}
+    error={error}
+/>
+         <RiskResult result={result} />
 
           <button
     onClick={() => setShowHistory(!showHistory)}
@@ -168,28 +95,7 @@ useEffect(() => {
     {showHistory ? "Hide History" : "Show History"}
 </button>
 
-{showHistory && (
-    <div className="mt-4 text-left">
-        <h2 className="text-lg font-semibold mb-2">Prediction History</h2>
-        {predictions.length === 0 ? (
-            <p className="text-gray-500">No predictions yet!</p>
-        ) : (
-            <div className="flex flex-col gap-2">
-                {predictions.map((prediction) => (
-                    <div
-                        key={prediction.id}
-                        className="border border-gray-200 rounded-md p-3 text-sm"
-                    >
-                        <p>ID: {prediction.id}</p>
-                        <p>Age: {prediction.age}</p>
-                        <p>Glucose: {prediction.glucose}</p>
-                        <p className="font-medium">Result: {prediction.result}</p>
-                    </div>
-                ))}
-            </div>
-        )}
-    </div>
-)}
+{showHistory && <HistoryList predictions={predictions} />}
         </div>
     )
 }

@@ -1,22 +1,24 @@
-function HistoryList() {
-    const predictions = [
-        { id: 1, age: 25, glucose: 150, result: "High Risk" },
-        { id: 2, age: 30, glucose: 120, result: "Low Risk" },
-        { id: 3, age: 45, glucose: 180, result: "High Risk" },
-    ]
-
+function HistoryList({ predictions }) {
     return (
-        <div>
-            <h2>Prediction History</h2>
-            {predictions.map((prediction) => (
-                <div key={prediction.id}>
-                    <p>ID: {prediction.id}</p>
-                    <p>Age: {prediction.age}</p>
-                    <p>Glucose: {prediction.glucose}</p>
-                    <p>Result: {prediction.result}</p>
-                    <hr />
+        <div className="mt-4 text-left">
+            <h2 className="text-lg font-semibold mb-2">Prediction History</h2>
+            {predictions.length === 0 ? (
+                <p className="text-gray-500">No predictions yet!</p>
+            ) : (
+                <div className="flex flex-col gap-2">
+                    {predictions.map((prediction) => (
+                        <div
+                            key={prediction.id}
+                            className="border border-gray-200 rounded-md p-3 text-sm"
+                        >
+                            <p>ID: {prediction.id}</p>
+                            <p>Age: {prediction.age}</p>
+                            <p>Glucose: {prediction.glucose}</p>
+                            <p className="font-medium">Result: {prediction.result}</p>
+                        </div>
+                    ))}
                 </div>
-            ))}
+            )}
         </div>
     )
 }
