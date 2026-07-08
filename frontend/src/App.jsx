@@ -50,7 +50,15 @@ useEffect(() => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
     }
-
+const handleDelete = async (prediction_id) => {
+    try {
+        await axios.delete(`http://localhost:8000/predictions/${prediction_id}`)
+        fetchHistory()  // Refresh the list after deleting
+    } catch (error) {
+        console.error("Delete failed:", error)
+        setError("Failed to delete prediction.")
+    }
+}
     // Handle form submit
     const handleSubmit = async () => {
     if (!formData.age || !formData.glucose) {
@@ -76,8 +84,7 @@ useEffect(() => {
 
     return (
        <div className="max-w-md mx-auto mt-10 p-6">
-    <h1 className="text-3xl font-bold text-center mb-2">HealtPulse</h1>
-    <p className="text-center text-gray-500 mb-6">AI Powered Disease Risk Checker</p>
+<h1 className="text-3xl font-bold text-center mb-2">HealthPulse</h1>    <p className="text-center text-gray-500 mb-6">AI Powered Disease Risk Checker</p>
             {/* Form Section */}
 <HealthForm
     formData={formData}
@@ -95,7 +102,7 @@ useEffect(() => {
     {showHistory ? "Hide History" : "Show History"}
 </button>
 
-{showHistory && <HistoryList predictions={predictions} />}
+{showHistory && <HistoryList predictions={predictions} handleDelete={handleDelete} />}
         </div>
     )
 }
