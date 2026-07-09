@@ -102,8 +102,7 @@ const handleDelete = async (prediction_id) => {
     {showHistory ? "Hide History" : "Show History"}
 </button>
 
-{showHistory && <HistoryList predictions={predictions} handleDelete={handleDelete} />}
-        </div>
+{showHistory && <HistoryList />}        </div>
     )
 }
 

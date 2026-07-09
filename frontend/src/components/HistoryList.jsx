@@ -1,4 +1,7 @@
-function HistoryList({ predictions, handleDelete }) {
+import { usePredictions } from '../context/PredictionContext'
+function HistoryList() {
+    const { predictions, handleDelete } = usePredictions()
+
     return (
         <div className="mt-4 text-left">
             <h2 className="text-lg font-semibold mb-2">Prediction History</h2>
