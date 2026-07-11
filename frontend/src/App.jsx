@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState} from 'react'
 import RiskResult from './components/RiskResult'
 import HealthForm from './components/HealthForm'
 import HistoryList from './components/HistoryList'
-
+import { usePredictions } from './context/PredictionContext'   // ← ADD THIS
 function App() {
     // Form data state
     const [formData, setFormData] = useState({
@@ -27,38 +27,15 @@ function App() {
     const [showHistory, setShowHistory] = useState(false)
 
     // History data state
-    const [predictions, setPredictions] = useState([])
-
-    // useEffect → fetch history when page loads
-const fetchHistory = () => {
-    axios.get("http://localhost:8000/predictions/")
-        .then((response) => {
-            setPredictions(response.data)
-        })
-        .catch((error) => {
-            console.error("Failed to fetch history:", error)
-        })
-}
-
-useEffect(() => {
-    console.log("Page loaded! Fetching history...")
-    fetchHistory()
-}, [])
+ // Pull fetchHistory from context (predictions themselves live in context now, used by HistoryList)
+    const { fetchHistory } = usePredictions()
 
     // Handle any input change
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
     }
-const handleDelete = async (prediction_id) => {
-    try {
-        await axios.delete(`http://localhost:8000/predictions/${prediction_id}`)
-        fetchHistory()  // Refresh the list after deleting
-    } catch (error) {
-        console.error("Delete failed:", error)
-        setError("Failed to delete prediction.")
-    }
-}
+
     // Handle form submit
     const handleSubmit = async () => {
     if (!formData.age || !formData.glucose) {

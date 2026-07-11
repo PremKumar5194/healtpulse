@@ -5,11 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "beautifulsoup4",
     "fastapi>=0.137.0",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
     "pymysql>=1.2.0",
     "python-dotenv>=1.2.2",
+    "requests",
     "scikit-learn>=1.9.0",
     "shap>=0.52.0",
     "sqlalchemy>=2.0.50",
