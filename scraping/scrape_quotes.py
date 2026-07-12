@@ -39,7 +39,7 @@ while url:
 
 df = pd.DataFrame(data)
 print(df)
-print(f"Total quotes scraped: {len(df)}")
+print(f"Total quotes scraped : {len(df)}")
 
 df.to_csv("scraping/quotes.csv", index=False)
 print("Saved to scraping/quotes.csv")
