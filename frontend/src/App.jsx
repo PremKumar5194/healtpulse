@@ -3,15 +3,19 @@ import { useState} from 'react'
 import RiskResult from './components/RiskResult'
 import HealthForm from './components/HealthForm'
 import HistoryList from './components/HistoryList'
-import { usePredictions } from './context/PredictionContext'   // ← ADD THIS
+import { usePredictions } from './context/PredictionContext'
+
 function App() {
     // Form data state
     const [formData, setFormData] = useState({
+        pregnancies: '',
         age: '',
         glucose: '',
         blood_pressure: '',
+        skin_thickness: '',
+        insulin: '',
         bmi: '',
-        insulin: ''
+        diabetes_pedigree_function: ''
     })
 
     // Result state
@@ -26,8 +30,7 @@ function App() {
     // Show/Hide history state
     const [showHistory, setShowHistory] = useState(false)
 
-    // History data state
- // Pull fetchHistory from context (predictions themselves live in context now, used by HistoryList)
+    // Pull fetchHistory from context (predictions themselves live in context now, used by HistoryList)
     const { fetchHistory } = usePredictions()
 
     // Handle any input change
@@ -38,48 +41,60 @@ function App() {
 
     // Handle form submit
     const handleSubmit = async () => {
-    if (!formData.age || !formData.glucose) {
-        setError("Please fill all fields!")
-        return
-    }
+        const requiredFields = [
+            'pregnancies', 'age', 'glucose', 'blood_pressure',
+            'skin_thickness', 'insulin', 'bmi', 'diabetes_pedigree_function'
+        ]
+        const missingField = requiredFields.some(
+            (field) => formData[field] === '' || formData[field] === null
+        )
 
-    setLoading(true)
-    setError(null)
-    setResult(null)
+        if (missingField) {
+            setError("Please fill all fields!")
+            return
+        }
 
-    try {
-        const response = await axios.post("http://localhost:8000/predictions/", formData)
-        setResult(response.data)
-        fetchHistory()  // Refresh history after a new prediction
-    } catch (error) {
-        console.error("Prediction failed:", error)
-        setError("Something went wrong. Please try again.")
-    } finally {
-        setLoading(false)
+        setLoading(true)
+        setError(null)
+        setResult(null)
+
+        try {
+            const response = await axios.post("http://localhost:8000/predictions/", formData)
+            setResult(response.data)
+            fetchHistory()  // Refresh history after a new prediction
+        } catch (error) {
+            console.error("Prediction failed:", error)
+            setError("Something went wrong. Please try again.")
+        } finally {
+            setLoading(false)
+        }
     }
-}
 
     return (
-       <div className="max-w-md mx-auto mt-10 p-6">
-<h1 className="text-3xl font-bold text-center mb-2">HealthPulse</h1>    <p className="text-center text-gray-500 mb-6">AI Powered Disease Risk Checker</p>
+        <div className="max-w-md mx-auto mt-10 p-6">
+            <h1 className="text-3xl font-bold text-center mb-2">HealthPulse</h1>
+            <p className="text-center text-gray-500 mb-6">AI Powered Disease Risk Checker</p>
+
             {/* Form Section */}
-<HealthForm
-    formData={formData}
-    handleChange={handleChange}
-    handleSubmit={handleSubmit}
-    loading={loading}
-    error={error}
-/>
-         <RiskResult result={result} />
+            <HealthForm
+                formData={formData}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                loading={loading}
+                error={error}
+            />
 
-          <button
-    onClick={() => setShowHistory(!showHistory)}
-    className="mt-6 text-purple-600 underline hover:text-purple-800"
->
-    {showHistory ? "Hide History" : "Show History"}
-</button>
+            <RiskResult result={result} />
 
-{showHistory && <HistoryList />}        </div>
+            <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="mt-6 text-purple-600 underline hover:text-purple-800"
+            >
+                {showHistory ? "Hide History" : "Show History"}
+            </button>
+
+            {showHistory && <HistoryList />}
+        </div>
     )
 }
 

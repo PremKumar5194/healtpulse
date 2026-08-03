@@ -5,6 +5,17 @@ function HealthForm({ formData, handleChange, handleSubmit, loading, error }) {
 
             <div className="flex flex-col gap-3">
                 <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-1">Pregnancies</label>
+                    <input
+                        type="number"
+                        name="pregnancies"
+                        placeholder="Pregnancies"
+                        value={formData.pregnancies}
+                        onChange={handleChange}
+                        className="border border-gray-300 rounded-md p-2 w-full"
+                    />
+                </div>
+                <div>
                     <label className="block text-sm font-medium text-gray-600 mb-1">Age</label>
                     <input
                         type="number"
@@ -38,12 +49,12 @@ function HealthForm({ formData, handleChange, handleSubmit, loading, error }) {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">BMI</label>
+                    <label className="block text-sm font-medium text-gray-600 mb-1">Skin Thickness</label>
                     <input
                         type="number"
-                        name="bmi"
-                        placeholder="BMI"
-                        value={formData.bmi}
+                        name="skin_thickness"
+                        placeholder="Skin Thickness"
+                        value={formData.skin_thickness}
                         onChange={handleChange}
                         className="border border-gray-300 rounded-md p-2 w-full"
                     />
@@ -55,6 +66,29 @@ function HealthForm({ formData, handleChange, handleSubmit, loading, error }) {
                         name="insulin"
                         placeholder="Insulin"
                         value={formData.insulin}
+                        onChange={handleChange}
+                        className="border border-gray-300 rounded-md p-2 w-full"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-1">BMI</label>
+                    <input
+                        type="number"
+                        name="bmi"
+                        placeholder="BMI"
+                        value={formData.bmi}
+                        onChange={handleChange}
+                        className="border border-gray-300 rounded-md p-2 w-full"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-1">Diabetes Pedigree Function</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="diabetes_pedigree_function"
+                        placeholder="Diabetes Pedigree Function"
+                        value={formData.diabetes_pedigree_function}
                         onChange={handleChange}
                         className="border border-gray-300 rounded-md p-2 w-full"
                     />
