@@ -55,7 +55,7 @@ def predict_and_explain(patient_data: dict) -> dict:
 
     return {
         "result": result,
-        "confidence": probability,
+        "confidence": probability,  
         "shap_contributions": {
             name: float(value)
             for name, value in zip(FEATURE_ORDER, contributions)
