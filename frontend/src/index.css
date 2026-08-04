@@ -1,21 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap');
 @import "tailwindcss";
 
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --text: #5C594F;
+  --text-h: #0B1F2A;
+  --bg: #F7F5F0;
+  --border: #E4E1D8;
+  --code-bg: #EFEDE4;
+  --accent: #3D7A6E;
+  --accent-bg: rgba(61, 122, 110, 0.1);
+  --accent-border: rgba(61, 122, 110, 0.5);
+  --social-bg: rgba(239, 237, 228, 0.5);
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    rgba(0, 0, 0, 0.08) 0 10px 15px -3px, rgba(0, 0, 0, 0.04) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+  --heading: 'Source Serif 4', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -34,21 +35,17 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
+    --text: #A8A497;
+    --text-h: #F0EEE6;
+    --bg: #11181A;
+    --border: #2A322F;
+    --code-bg: #1B2224;
+    --accent: #5DA593;
+    --accent-bg: rgba(93, 165, 147, 0.15);
+    --accent-border: rgba(93, 165, 147, 0.5);
+    --social-bg: rgba(42, 50, 47, 0.5);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
   }
 }
 
@@ -68,13 +65,11 @@ body {
   box-sizing: border-box;
 }
 
-
 h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
 }
-
 
 h2 {
   font-size: 24px;

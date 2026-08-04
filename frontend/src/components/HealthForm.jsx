@@ -1,88 +1,121 @@
 function HealthForm({ formData, handleChange, handleSubmit, loading, error }) {
+    const isFemale = formData.gender === 'female'
+
     return (
         <div>
-            <h2 className="text-xl font-semibold mb-4">Enter Health Data</h2>
+          
 
             <div className="flex flex-col gap-3">
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Pregnancies</label>
-                    <input
-                        type="number"
-                        name="pregnancies"
-                        placeholder="Pregnancies"
-                        value={formData.pregnancies}
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Gender</label>
+                    <select
+                        name="gender"
+                        value={formData.gender}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
-                    />
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
+                    >
+                        <option value="">Select gender</option>
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                    </select>
                 </div>
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Age</label>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Age</label>
                     <input
                         type="number"
                         name="age"
                         placeholder="Age"
                         value={formData.age}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
                     />
                 </div>
+
+                {isFemale && (
+                    <div>
+                        <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Pregnancies</label>
+                        <input
+                            type="number"
+                            name="pregnancies"
+                            placeholder="Pregnancies"
+                            value={formData.pregnancies}
+                            onChange={handleChange}
+                            className="rounded-md p-2 w-full"
+                            style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
+                        />
+                    </div>
+                )}
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Glucose</label>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Glucose</label>
                     <input
                         type="number"
                         name="glucose"
                         placeholder="Glucose"
                         value={formData.glucose}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
                     />
                 </div>
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Blood Pressure</label>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Blood Pressure</label>
                     <input
                         type="number"
                         name="blood_pressure"
                         placeholder="Blood Pressure"
                         value={formData.blood_pressure}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
                     />
                 </div>
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Skin Thickness</label>
-                    <input
-                        type="number"
-                        name="skin_thickness"
-                        placeholder="Skin Thickness"
-                        value={formData.skin_thickness}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Insulin</label>
-                    <input
-                        type="number"
-                        name="insulin"
-                        placeholder="Insulin"
-                        value={formData.insulin}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">BMI</label>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>BMI</label>
                     <input
                         type="number"
                         name="bmi"
                         placeholder="BMI"
                         value={formData.bmi}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
                     />
                 </div>
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-1">Diabetes Pedigree Function</label>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Skin Thickness</label>
+                    <input
+                        type="number"
+                        name="skin_thickness"
+                        placeholder="Skin Thickness"
+                        value={formData.skin_thickness}
+                        onChange={handleChange}
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Insulin</label>
+                    <input
+                        type="number"
+                        name="insulin"
+                        placeholder="Insulin"
+                        value={formData.insulin}
+                        onChange={handleChange}
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Diabetes Pedigree Function</label>
                     <input
                         type="number"
                         step="0.01"
@@ -90,7 +123,8 @@ function HealthForm({ formData, handleChange, handleSubmit, loading, error }) {
                         placeholder="Diabetes Pedigree Function"
                         value={formData.diabetes_pedigree_function}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded-md p-2 w-full"
+                        className="rounded-md p-2 w-full"
+                        style={{ border: '1px solid var(--border)', background: 'var(--code-bg)', color: 'var(--text-h)' }}
                     />
                 </div>
             </div>
@@ -98,21 +132,22 @@ function HealthForm({ formData, handleChange, handleSubmit, loading, error }) {
             <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className={`font-medium px-4 py-2 rounded-md mt-4 transition ${
+                className="font-medium px-4 py-2 rounded-md mt-4 transition"
+                style={
                     loading
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-purple-600 text-white hover:bg-purple-700"
-                }`}
+                        ? { background: 'var(--border)', color: 'var(--text)', cursor: 'not-allowed' }
+                        : { background: 'var(--accent)', color: '#fff' }
+                }
             >
                 {loading ? "Checking..." : "Check Risk"}
             </button>
 
             {loading && (
-                <p className="text-purple-600 mt-4 animate-pulse">Calculating risk...</p>
+                <p className="mt-4 animate-pulse" style={{ color: 'var(--accent)' }}>Calculating risk...</p>
             )}
 
             {error && (
-                <div className="bg-red-50 border border-red-300 text-red-600 rounded-md p-3 mt-4">
+                <div className="rounded-md p-3 mt-4" style={{ background: 'var(--accent-bg)', border: '1px solid #C4573B', color: '#C4573B' }}>
                     {error}
                 </div>
             )}

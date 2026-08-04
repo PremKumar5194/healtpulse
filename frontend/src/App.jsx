@@ -1,13 +1,13 @@
 import axios from 'axios'
-import { useState} from 'react'
+import { useState } from 'react'
 import RiskResult from './components/RiskResult'
 import HealthForm from './components/HealthForm'
 import HistoryList from './components/HistoryList'
 import { usePredictions } from './context/PredictionContext'
 
 function App() {
-    // Form data state
     const [formData, setFormData] = useState({
+        gender: '',
         pregnancies: '',
         age: '',
         glucose: '',
@@ -18,82 +18,83 @@ function App() {
         diabetes_pedigree_function: ''
     })
 
-    // Result state
     const [result, setResult] = useState(null)
-
-    // Loading state
     const [loading, setLoading] = useState(false)
-
-    // Error state
     const [error, setError] = useState(null)
-
-    // Show/Hide history state
     const [showHistory, setShowHistory] = useState(false)
 
-    // Pull fetchHistory from context (predictions themselves live in context now, used by HistoryList)
     const { fetchHistory } = usePredictions()
 
-    // Handle any input change
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
     }
 
-    // Handle form submit
-    const handleSubmit = async () => {
-        const requiredFields = [
-            'pregnancies', 'age', 'glucose', 'blood_pressure',
-            'skin_thickness', 'insulin', 'bmi', 'diabetes_pedigree_function'
-        ]
-        const missingField = requiredFields.some(
-            (field) => formData[field] === '' || formData[field] === null
-        )
-
-        if (missingField) {
-            setError("Please fill all fields!")
-            return
-        }
-
-        setLoading(true)
-        setError(null)
-        setResult(null)
-
-        try {
-            const response = await axios.post("http://localhost:8000/predictions/", formData)
-            setResult(response.data)
-            fetchHistory()  // Refresh history after a new prediction
-        } catch (error) {
-            console.error("Prediction failed:", error)
-            setError("Something went wrong. Please try again.")
-        } finally {
-            setLoading(false)
-        }
+const handleSubmit = async () => {
+    if (!formData.age || !formData.glucose || !formData.gender) {
+        setError("Please fill all fields!")
+        return
     }
 
+    setLoading(true)
+    setError(null)
+    setResult(null)
+
+    try {
+        const { gender, ...rest } = formData
+        const payload = {
+            ...rest,
+            pregnancies: gender === 'male' ? null: Number(formData.pregnancies)
+        }
+        const response = await axios.post("http://localhost:8000/predictions/", payload)
+        setResult({ ...response.data, gender })
+        fetchHistory()
+    } catch (error) {
+        console.error("Prediction failed:", error)
+        setError("Something went wrong. Please try again.")
+    } finally {
+        setLoading(false)
+    }
+}
+
     return (
-        <div className="max-w-md mx-auto mt-10 p-6">
-            <h1 className="text-3xl font-bold text-center mb-2">HealthPulse</h1>
-            <p className="text-center text-gray-500 mb-6">AI Powered Disease Risk Checker</p>
+        <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+            <div style={{ maxWidth: '960px', margin: '0 auto', padding: '48px 24px' }}>
+                <h1 style={{ fontFamily: 'var(--heading)', fontWeight: 500, fontSize: '32px', color: 'var(--text-h)', marginBottom: '4px' }}>
+                    HealthPulse
+                </h1>
+                <p style={{ color: 'var(--text)', marginBottom: '32px' }}>
+                    AI Powered Disease Risk Checker
+                </p>
 
-            {/* Form Section */}
-            <HealthForm
-                formData={formData}
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-                loading={loading}
-                error={error}
-            />
+                <div className="grid gap-8" style={{ gridTemplateColumns: result ? '1fr 1fr' : '1fr' }}>
+                    <div>
+                        <HealthForm
+                            formData={formData}
+                            handleChange={handleChange}
+                            handleSubmit={handleSubmit}
+                            loading={loading}
+                            error={error}
+                        />
+                    </div>
 
-            <RiskResult result={result} />
+                    {result && (
+                        <div>
+                            <RiskResult result={result} />
+                        </div>
+                    )}
+                </div>
 
-            <button
-                onClick={() => setShowHistory(!showHistory)}
-                className="mt-6 text-purple-600 underline hover:text-purple-800"
-            >
-                {showHistory ? "Hide History" : "Show History"}
-            </button>
+                <button
+                    onClick={() => setShowHistory(!showHistory)}
+                    className="mt-6 underline"
+                    style={{ color: 'var(--accent)' }}
+                >
+                    {showHistory ? "Hide History" : "Show History"}
+                </button>
 
-            {showHistory && <HistoryList />}
+                {showHistory && <HistoryList />}
+            </div>
         </div>
     )
 }

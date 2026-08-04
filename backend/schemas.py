@@ -1,9 +1,12 @@
 from pydantic import BaseModel, field_validator
 from datetime import datetime
+from typing import Optional
+
+
 
 
 class HealthInput(BaseModel):
-    pregnancies: int
+    pregnancies: Optional[int] = None
     age: int
     glucose: float
     blood_pressure: float
@@ -15,7 +18,7 @@ class HealthInput(BaseModel):
     @field_validator("pregnancies")
     @classmethod
     def validate_pregnancies(cls, v):
-        if v < 0 or v > 20:
+        if v is not None and (v < 0 or v > 20):
             raise ValueError("Pregnancies must be between 0 and 20")
         return v
 
@@ -71,7 +74,7 @@ class HealthInput(BaseModel):
 
 class PredictionOutput(BaseModel):
     id: int
-    pregnancies: int
+    pregnancies: Optional[int] = None
     age: int
     glucose: float
     blood_pressure: float

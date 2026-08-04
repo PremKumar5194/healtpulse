@@ -12,10 +12,12 @@ router = APIRouter(
 # POST - Create prediction
 @router.post("/", response_model=schemas.PredictionOutput)
 def predict(data: schemas.HealthInput, db: Session = Depends(get_db)):
-    prediction_result = predict_and_explain(data.model_dump())
+    model_input = data.model_dump()
+    model_input["pregnancies"] = data.pregnancies if data.pregnancies is not None else 0
+    prediction_result = predict_and_explain(model_input)
 
     prediction = models.Prediction(
-        pregnancies=data.pregnancies,
+        pregnancies=data.pregnancies,  # stores None if male, real value if female
         age=data.age,
         glucose=data.glucose,
         blood_pressure=data.blood_pressure,
