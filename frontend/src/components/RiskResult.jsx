@@ -1,96 +1,103 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts'
-
 function RiskResult({ result }) {
-    if (!result) {
-        return null
-    }
+    if (!result) return null
 
-    const isHighRisk = result.result === "High Risk"
-    const riskColor = isHighRisk ? '#C4573B' : '#5B8C6E'
+    const isHighRisk = result.result === 'High Risk'
+    const accentColor = isHighRisk ? 'var(--danger)' : 'var(--accent)'
 
-    const chartData = result.shap_contributions
-        ? Object.entries(result.shap_contributions)
-            .map(([feature, value]) => ({ feature, value }))
-            .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+    const shapEntries = result.shap_contributions
+        ? Object.entries(result.shap_contributions).sort(
+              (a, b) => Math.abs(b[1]) - Math.abs(a[1])
+          )
         : []
+
+    const maxAbs = shapEntries.length
+        ? Math.max(...shapEntries.map(([, v]) => Math.abs(v)))
+        : 1
+
+    const featureLabel = (key) =>
+        key
+            .split('_')
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' ')
 
     return (
         <div
-            className="p-5 rounded-xl"
-            style={{ background: 'var(--code-bg)', border: '1px solid var(--border)' }}
+            className="hp-glass-panel hp-card hp-rise-in"
+            style={{ padding: 22, borderLeft: `4px solid ${accentColor}` }}
         >
-            <p
-                className="text-xs uppercase tracking-wide mb-1"
-                style={{ color: 'var(--text)', letterSpacing: '0.04em' }}
-            >
-                Result
-
+            <h2 style={{ fontSize: 17, marginBottom: 2 }}>
+                {isHighRisk ? '⚠ High Risk' : '✓ Low Risk'}
+            </h2>
+            <p style={{ fontSize: 13, color: 'var(--text)', marginBottom: 4 }}>
+                Confidence: {result.confidence}%
             </p>
-            <p
-                className="mb-4"
-                style={{ fontFamily: 'var(--heading)', fontWeight: 500, fontSize: '22px', color: riskColor }}
-            >
-                {result.result}
+            <p style={{ fontSize: 13, fontWeight: 500, color: accentColor, marginBottom: 14 }}>
+                {isHighRisk ? 'Please consult a doctor!' : 'You are doing well!'}
             </p>
 
-            <p className="text-xs mb-1" style={{ color: 'var(--text)' }}>Confidence</p>
-            <p
-                className="mb-1"
-                style={{ fontFamily: 'var(--mono)', fontWeight: 500, fontSize: '34px', color: 'var(--text-h)' }}
-            >
-                {(result.confidence * 100).toFixed(1)}%
-            </p>
-
-            <svg width="100%" height="24" viewBox="0 0 240 24" style={{ marginBottom: '16px' }}>
-                <polyline
-                    points="0,14 20,10 40,16 60,8 80,18 100,6 120,14 140,4 160,12 180,8 200,16 220,6 240,10"
-                    fill="none"
-                    stroke="var(--accent)"
-                    strokeWidth="1.5"
-                    opacity="0.5"
-                />
-            </svg>
-
-            {isHighRisk ? (
-                <p className="font-medium mb-4" style={{ color: riskColor }}>Please consult a doctor!</p>
-            ) : (
-                <p className="font-medium mb-4" style={{ color: riskColor }}>You are doing well!</p>
-            )}
-
-            {chartData.length > 0 && (
-                <div className="mt-4">
-                    <p className="text-xs font-medium mb-2" style={{ color: 'var(--text)' }}>
-                        What influenced this result
+            {shapEntries.length > 0 && (
+                <>
+                    <p className="hp-label" style={{ marginBottom: 8 }}>
+                        Feature Contribution (SHAP)
                     </p>
-                    <ResponsiveContainer width="100%" height={280}>
-                        <BarChart
-                            data={chartData}
-                            layout="vertical"
-                            margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                            <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--text)' }} />
-                            <YAxis
-                                type="category"
-                                dataKey="feature"
-                                width={110}
-                                tick={{ fontSize: 11, fill: 'var(--text)' }}
-                            />
-                            <Tooltip formatter={(value) => value.toFixed(3)} />
-                            <Bar dataKey="value">
-                                {chartData.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={entry.value >= 0 ? "#C4573B" : "#5B8C6E"}
-                                    />
-                                ))}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                    <p className="text-xs mt-2" style={{ color: 'var(--text)' }}>
-                        Clay = pushes risk higher, sage = pushes risk lower
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        {shapEntries.map(([feature, value], i) => {
+                            const isRiskFeature = value > 0
+                            const pct = (Math.abs(value) / maxAbs) * 100
+                            return (
+                                <div key={feature} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <span
+                                        style={{
+                                            width: 118,
+                                            fontSize: 12,
+                                            color: 'var(--text)',
+                                            flexShrink: 0,
+                                        }}
+                                    >
+                                        {featureLabel(feature)}
+                                    </span>
+                                    <div
+                                        style={{
+                                            flex: 1,
+                                            height: 10,
+                                            borderRadius: 6,
+                                            background: 'rgba(18,24,43,0.06)',
+                                            overflow: 'hidden',
+                                        }}
+                                    >
+                                        <div
+                                            className="hp-bar"
+                                            style={{
+                                                height: '100%',
+                                                width: `${pct}%`,
+                                                borderRadius: 6,
+                                                background: isRiskFeature ? 'var(--danger)' : 'var(--accent)',
+                                                animationDelay: `${i * 0.06}s`,
+                                            }}
+                                        />
+                                    </div>
+                                    <span
+                                        style={{
+                                            width: 48,
+                                            textAlign: 'right',
+                                            fontSize: 11,
+                                            fontFamily: 'var(--mono)',
+                                            color: 'var(--text)',
+                                            flexShrink: 0,
+                                        }}
+                                    >
+                                        {value > 0 ? '+' : ''}
+                                        {value.toFixed(2)}
+                                    </span>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <p style={{ fontSize: 11, color: 'var(--text)', marginTop: 10 }}>
+                        <span style={{ color: 'var(--danger)' }}>■</span> increases risk &nbsp;
+                        <span style={{ color: 'var(--accent)' }}>■</span> decreases risk
                     </p>
-                </div>
+                </>
             )}
         </div>
     )

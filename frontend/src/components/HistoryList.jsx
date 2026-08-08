@@ -4,42 +4,78 @@ function HistoryList() {
     const { predictions, handleDelete } = usePredictions()
 
     return (
-        <div className="mt-6 text-left">
-            <h2 className="text-lg mb-3" style={{ fontFamily: 'var(--heading)', fontWeight: 500, color: 'var(--text-h)' }}>
-                Prediction History
-            </h2>
+        <div className="mt-4 text-left">
+            <h2 style={{ fontSize: 16, marginBottom: 10 }}>Prediction History</h2>
+
             {predictions.length === 0 ? (
-                <p style={{ color: 'var(--text)' }}>No predictions yet!</p>
+                <p style={{ color: 'var(--text)', fontSize: 13 }}>No predictions yet!</p>
             ) : (
                 <div className="flex flex-col gap-2">
-                    {predictions.map((prediction) => {
-                        const isHighRisk = prediction.result === "High Risk"
-                        const riskColor = isHighRisk ? '#C4573B' : '#5B8C6E'
+                    {predictions.map((prediction, i) => {
+                        const isHighRisk = prediction.result === 'High Risk'
+                        const accentColor = isHighRisk ? 'var(--danger)' : 'var(--accent)'
+
                         return (
                             <div
                                 key={prediction.id}
-                                className="rounded-md p-3 text-sm"
+                                className="hp-glass-panel hp-rise-in"
                                 style={{
-                                    background: 'var(--code-bg)',
-                                    border: '1px solid var(--border)',
-                                    borderLeft: `3px solid ${riskColor}`
+                                    borderRadius: 12,
+                                    padding: 12,
+                                    borderLeft: `3px solid ${accentColor}`,
+                                    animationDelay: `${i * 0.06}s`,
+                                    fontSize: 13,
                                 }}
                             >
-                                <p style={{ color: 'var(--text)' }}>ID: {prediction.id}</p>
-                                {prediction.pregnancies !== null && prediction.pregnancies !== undefined && (
-                                    <p style={{ color: 'var(--text)' }}>Pregnancies: {prediction.pregnancies}</p>
-                                )}
-                                <p style={{ color: 'var(--text)' }}>Age: {prediction.age}</p>
-                                <p style={{ color: 'var(--text)' }}>Glucose: {prediction.glucose}</p>
-                                <p style={{ fontWeight: 500, color: 'var(--text-h)' }}>
-                                    Result: <span style={{ color: riskColor }}>{prediction.result}</span>
-                                </p>
+                                <div className="flex items-center justify-between mb-1">
+                                    <span style={{ color: 'var(--text-h)', fontWeight: 600 }}>
+                                        #{prediction.id}
+                                    </span>
+                                    <span style={{ color: accentColor, fontWeight: 600 }}>
+                                        {prediction.result}
+                                    </span>
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr 1fr',
+                                        gap: '2px 12px',
+                                        color: 'var(--text)',
+                                        fontFamily: 'var(--mono)',
+                                        fontSize: 11.5,
+                                    }}
+                                >
+                                    <span>Gender: {prediction.gender ?? '—'}</span>
+                                    <span>Age: {prediction.age}</span>
+                                    {prediction.pregnancies !== null && prediction.pregnancies !== undefined && (
+                                        <span>Pregnancies: {prediction.pregnancies}</span>
+                                    )}
+                                    <span>Glucose: {prediction.glucose}</span>
+                                    <span>Blood Pressure: {prediction.blood_pressure}</span>
+                                    <span>BMI: {prediction.bmi}</span>
+                                    <span>Skin Thickness: {prediction.skin_thickness}</span>
+                                    <span>Insulin: {prediction.insulin}</span>
+                                    <span>Pedigree: {prediction.diabetes_pedigree_function}</span>
+                                    <span>Confidence: {prediction.confidence}%</span>
+                                </div>
+
                                 <button
                                     onClick={() => handleDelete(prediction.id)}
-                                    className="mt-2 text-xs font-medium px-2 py-1 rounded transition"
-                                    style={{ background: 'var(--accent-bg)', color: '#C4573B' }}
+                                    className="hp-btn"
+                                    style={{
+                                        marginTop: 8,
+                                        fontSize: 11,
+                                        fontWeight: 600,
+                                        padding: '4px 10px',
+                                        borderRadius: 8,
+                                        border: '1px solid var(--danger)',
+                                        background: 'var(--danger-bg)',
+                                        color: '#B4392E',
+                                        cursor: 'pointer',
+                                    }}
                                 >
-                                    Delete
+                                    🗑 Delete
                                 </button>
                             </div>
                         )
